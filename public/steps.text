@@ -1,0 +1,87 @@
+Designing :-AppBar(header),Code editor(Editor+Code{used for making repetitive component}),Output console 
+
+To run with npx 
+1)change directory : cd .\code
+2)npm start
+
+Header-->
+1)import { AppBar, Toolbar, styled } from '@mui/material'
+2)AppBar with css modified externally in a external expression containg Toolbar
+
+Editor Part-->
+1)import icons,box,styled from miui
+2)divide middle part into two-->use boxes instead of div and modify them externally and change the name of
+box tag 
+3)icons would be imported from miui as tag element and other element would be created as box
+
+4)Writer Part : install code mirro2 package and import its libarary and css funs,html,css,js suppporting files:
+i)replace box with controledfullscreen compoennet to insert editor
+ii)Handling its CSS : give a class name to controledfullscreen compoennet and handle its css in app.css
+Uncluding : CodeMirror,CodeMirror-gutters,CodeMirror-scroll
+iii)To handle which language : write options in its tag for material and line numbers
+iv)To input values in editor : use contextAPI..create spearte context folder and cerate conetxt jsx
+a)create states for setting html,css,js
+b)pass those value in data provider as return function
+c)export in the main app.js and use it as tag to wrap whole home.jsx,then create children as prop in dataprovider
+func,
+d)remove strict mode form index.js becuase editor will force to render root two times...
+
+
+To input values in editor : 
+1)export context hook and import it in code.jsx
+2)make states and fetch its values from useContext function fetched from above.
+3)add these in main component boxes of editor : value = {html}
+             onChange = {setHtml}
+4)add these in controlededitor : value={ value}
+          onBeforeChange={handleChange}
+then create these in editor.jsx : 
+const handleChange = ( editor, data, value) => {
+onChange(value);
+    }
+
+
+To make minimize/maximize button :
+1)Use useState to manage its state....import into editor.jsx 
+2)create state in editor : const [open, setOpen] = useState(true);
+3)add onclick on the icon :  onClick = { () => setOpen(prevState => !prevState) }
+4)WE WILL minimize through flex grow option..add this container style={ open ? null : { flexGrow : 0 }}
+
+
+Combining All language as output in rsult box :
+1)create html bundle in result.jsx 
+const srcCode = `
+    <html>
+        <body></body>
+        <style></style>
+        <script></script>
+    </html>
+    `
+2)import use context,datacontext for using data
+3)import states using useContext and put tempolate on their places: const { html,css,jss } = useContext(DataContext);
+4)display that bundle(source code) using iframe:
+<iframe 
+          srcDoc = {srcCode} 
+          title = "Output"
+          sandbox = 'allow-scripts'
+          width="100%"
+          height="100%"
+          />
+
+
+To not frequently update DOM while writing code : It should be updated after writing code
+1)use useeffect and settimeout(1s): import usestate,useffect   
+states : const[src, setSrc] = useState('');
+2) useEffect(() => {
+       const timeout =  setTimeout(() => {
+           setSrc(srcCode);
+        }, 1000)
+        return () =>clearTimeout(timeout);
+    }, [html, css, js])
+3)
+
+
+
+
+
+To show dynamic value to a component : 
+pass props(properties) in the compoent mentioned in parent file 
